@@ -1,0 +1,52 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
+
+#intro {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
+}
+
+#scrolly {
+  display: flex;
+  position: relative;
+}
+
+.graphic {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 50%;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#graphic-box {
+  font-size: 24px;
+  padding: 20px;
+  background: white;
+  border: 2px solid #ccc;
+}
+
+.text {
+  width: 50%;
+  padding: 100vh 20px 100vh 20px;
+}
+
+.step {
+  margin: 0 0 300px 0;
+  font-size: 20px;
+  padding: 20px;
+  background: #ddd;
+  border-left: 5px solid transparent;
+  transition: border-left 0.3s;
+}
+.step.active {
+  border-left: 5px solid #000;
+}
