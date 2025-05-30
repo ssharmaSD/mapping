@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>East Asia Scrollytelling</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Leaflet PolylineDecorator Plugin (optional arrowheads) -->
+  <script src="https://unpkg.com/leaflet-polylinedecorator@1.7.0/dist/leaflet.polylineDecorator.min.js"></script>
 </head>
+
 <body>
   <section id="intro">
     <h1>Understanding the Interactions of Racial Capitalism</h1>
     <h3>I was prompted to map circuits of racial capitalism to understand how racial capitalism unites and divides people from all over the world. I wanted to explore the way people and environments in XXXXX were impacted by racial capitalism.</h3>
     <p>Suhani Sharma for HILD 12 Spring 2025</p>
+    <p>Note: Please try refreshing this page if you wish to reset the map after making any changes.</p>
   </section>
 
   <section id="scrolly">
@@ -19,14 +24,15 @@
       <div id="map"></div>
     </div>
     <div class="text">
-      <div class="step" data-country="China">China: A vast country with ancient history and a powerful modern presence.</div>
-      <div class="step" data-country="Japan">Japan: Known for its technology and rich cultural heritage.</div>
-      <div class="step" data-country="South Korea">South Korea: A global leader in entertainment and innovation.</div>
-      <div class="step" data-country="Taiwan">Taiwan: A hub of high-tech industry and vibrant democracy.</div>
+      <div class="step" data-step-id="step-1">China: A vast country with ancient history and a powerful modern presence.</div>
+      <div class="step" data-step-id="step-2">China, the UK, and the US: Interconnected through trade and labor networks. Arrows indicate economic flow.</div>
     </div>
   </section>
 
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Main Script -->
   <script src="script.js"></script>
 </body>
 </html>
