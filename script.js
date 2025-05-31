@@ -1,81 +1,125 @@
-// Setup base map
-const map = L.map('map').setView([35, 105], 2);
+mapboxgl.accessToken = 'pk.eyJ1Ijoic3VzMDA5IiwiYSI6ImNtYmNna3N6azBxaGcyaW9ja2h0c21tbmEifQ.wqsax7wbr9g1_i1wG3Ee0A';
 
-// English map tiles
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap contributors &copy; CartoDB'
-}).addTo(map);
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v11',
+  center: [104.1954, 35.8617], // China
+  zoom: 2
+});
 
-// --- Layer setup per step ---
-const stepLayers = {
-  "step-1": L.layerGroup(),
-  "step-2": L.layerGroup(),
+// Coordinates
+const coords = {
+  china: [104.1954, 35.8617],
+  uk: [-3.4360, 55.3781],
+  us: [-95.7129, 37.0902],
+  hawaii: [-155.5828, 19.8968]
 };
 
-const china = [35.8617, 104.1954];
-const uk = [55.3781, -3.4360];
-const us = [37.0902, -95.7129];
+// Step actions
+const steps = {
+  1: () => {
+    map.flyTo({ center: coords.china, zoom: 4 });
+    clearArrows();
+  },
+  2: () => {
+    map.flyTo({ center: coords.china, zoom: 2.5 });
+    drawArrows();
+  },
+  3: () => {
+    map.flyTo({ center: coords.hawaii, zoom: 4 });
+    clearArrows();
+  }
+};
 
-// Step 1: China only
-stepLayers["step-1"].addLayer(
-  L.circle(china, {
-    radius: 500000,
-    color: 'red'
-  }).bindPopup("China")
-);
+// Draw arrows using GeoJSON lines
+let arrowLayerId = 'arrows';
 
-// Step 2: China, UK, US + arrows
-stepLayers["step-2"].addLayer(L.marker(china).bindPopup("China"));
-stepLayers["step-2"].addLayer(L.marker(uk).bindPopup("UK"));
-stepLayers["step-2"].addLayer(L.marker(us).bindPopup("USA"));
+function drawArrows() {
+  const geojson = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [coords.china, coords.uk]
+        }
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [coords.china, coords.us]
+        }
+      }
+    ]
+  };
 
-// Draw arrows with PolylineDecorator
-const polylineUK = L.polyline([china, uk], { color: 'blue' });
-const polylineUS = L.polyline([china, us], { color: 'blue' });
+  if (map.getLayer(arrowLayerId)) {
+    map.getSource(arrowLayerId).setData(geojson);
+  } else {
+    map.addSource(arrowLayerId, {
+      type: 'geojson',
+      data: geojson
+    });
 
-stepLayers["step-2"].addLayer(polylineUK);
-stepLayers["step-2"].addLayer(polylineUS);
+    map.addLayer({
+      id: arrowLayerId,
+      type: 'line',
+      source: arrowLayerId,
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+        'symbol-placement': 'line'
+      },
+      paint: {
+        'line-color': '#0077ff',
+        'line-width': 2
+      }
+    });
 
-// Arrowheads
-const decoratorUK = L.polylineDecorator(polylineUK, {
-  patterns: [
-    { offset: '50%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 10, pathOptions: { fillOpacity: 1, weight: 0 } }) }
-  ]
+    map.addLayer({
+      id: `${arrowLayerId}-arrows`,
+      type: 'symbol',
+      source: arrowLayerId,
+      layout: {
+        'symbol-placement': 'line',
+        'symbol-spacing': 50,
+        'icon-image': 'arrow',
+        'icon-size': 0.5,
+        'icon-allow-overlap': true
+      }
+    });
+  }
+}
+
+// Clear arrow layers
+function clearArrows() {
+  if (map.getLayer(arrowLayerId)) map.removeLayer(arrowLayerId);
+  if (map.getLayer(`${arrowLayerId}-arrows`)) map.removeLayer(`${arrowLayerId}-arrows`);
+  if (map.getSource(arrowLayerId)) map.removeSource(arrowLayerId);
+}
+
+// Load arrow icon
+map.on('load', () => {
+  map.loadImage('https://docs.mapbox.com/mapbox-gl-js/assets/arrow.png', (err, image) => {
+    if (err) throw err;
+    if (!map.hasImage('arrow')) map.addImage('arrow', image);
+  });
 });
 
-const decoratorUS = L.polylineDecorator(polylineUS, {
-  patterns: [
-    { offset: '50%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 10, pathOptions: { fillOpacity: 1, weight: 0 } }) }
-  ]
-});
-
-stepLayers["step-2"].addLayer(decoratorUK);
-stepLayers["step-2"].addLayer(decoratorUS);
-
-// Track and update active layer
-let activeLayer = null;
-
-// Scroll-triggered layer switching
-const steps = document.querySelectorAll(".step");
-
-const observer = new IntersectionObserver((entries) => {
+// Scroll logic
+const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      steps.forEach(step => step.classList.remove("active"));
-      entry.target.classList.add("active");
-
-      const stepId = entry.target.getAttribute("data-step-id");
-
-      if (activeLayer) {
-        activeLayer.remove();
-      }
-
-      activeLayer = stepLayers[stepId];
-      activeLayer.addTo(map);
+      const step = entry.target.dataset.step;
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      entry.target.classList.add('active');
+      if (steps[step]) steps[step]();
     }
   });
 }, {
   threshold: 0.5
 });
 
-steps.forEach(step => observer.observe(step));
+document.querySelectorAll('.step').forEach(step => observer.observe(step));
