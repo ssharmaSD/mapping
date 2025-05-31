@@ -127,4 +127,10 @@ const observer = new IntersectionObserver(entries => {
   threshold: 0.5
 });
 
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    map.resize();
+  }, 100); // slight delay allows layout to complete
+});
+
 document.querySelectorAll('.step').forEach(step => observer.observe(step));
