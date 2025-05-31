@@ -102,8 +102,13 @@ function clearArrows() {
 
 // Load arrow icon
 map.on('load', () => {
+  map.resize(); // Ensure correct size on load
+
   map.loadImage('https://docs.mapbox.com/mapbox-gl-js/assets/arrow.png', (err, image) => {
-    if (err) throw err;
+    if (err) {
+      console.error('Arrow image failed to load', err);
+      return;
+    }
     if (!map.hasImage('arrow')) map.addImage('arrow', image);
   });
 });
