@@ -1,66 +1,57 @@
-body {
+/* General Reset */
+* {
   margin: 0;
-  font-family: sans-serif;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#intro {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #f0f0f0;
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Banner */
+.banner {
+  background-color: #333;
+  color: #fff;
   text-align: center;
+  padding: 60px 20px;
+}
 
-  max-width: 800px;
+.banner h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+/* Section Styling */
+.content-section {
+  padding: 40px 20px;
+  max-width: 1000px;
   margin: auto;
-  padding: 2rem;
 }
 
-.intro-content {
-  max-width: 700px;
-  margin-left: 25px;
-  margin-right: 25px;
-  padding: 5em;
+.content-section h2 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-
-#scrolly {
+/* Flex Container */
+.flex-container {
   display: flex;
-  position: relative;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
 }
 
-.graphic {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  width: 55%; 
-  z-index: 1;
-}
-
-#map {
-  height: 100%;
+.flex-container img {
+  max-width: 300px;
   width: 100%;
-  border: 2px solid red; 
-}
-
-.text {
-  width: 35%;
-  padding: 100vh 20px 100vh 20px;
-  background: rgba(255, 255, 255, 0.8);
-  z-index: 2;
-}
-
-.step {
-  margin: 0 0 300px 0;
-  font-size: 20px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.75); /* Semi-transparent background */
-  border-left: 5px solid transparent;
-  transition: border-left 0.3s;
+  height: auto;
   border-radius: 8px;
 }
 
-.step.active {
-  border-left: 5px solid #333;
+.text-content {
+  flex: 1;
+  min-width: 200px;
 }
