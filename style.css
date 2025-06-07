@@ -30,12 +30,18 @@ body {
   margin: auto;
 }
 
-.reflection-section h3 {
+.reflection-section {
   padding: 40px 20px;
   max-width: 700px;
-  text-indent: 2em;
   margin: auto;
 }
+
+.reflection-section h3 {
+  text-indent: 2em;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
 
 .content-section img {
   display: block;
