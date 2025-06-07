@@ -29,10 +29,13 @@ body {
   max-width: 800px;
   margin: auto;
 }
+
+/*
 .content-section ul li {
-  padding-left: 1em;  /* indent inside the li */
-  text-indent: 1em;   /* optional: indents the first line too */
+  padding-left: 1em;  
+  text-indent: 1em;   
 }
+*/
 
 .reflection-section {
   padding: 40px 20px;
